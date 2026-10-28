@@ -1,5 +1,6 @@
 ISO_DIR := build/output/build
 DESCRIPTION := build/nexos-descr
+BUILD_ARGS ?=
 
 .PHONY: host-check host-selinux description build clone-vendor lint test clean
 
@@ -12,10 +13,8 @@ host-selinux:
 description:
 	./build/scripts/prepare-description.sh
 
-build: host-check description
-	sudo kiwi-ng --type=iso --profile=Xfce-Live --kiwi-file=Fedora.kiwi \
-		--color-output system build --description $(DESCRIPTION) \
-		--target-dir $(ISO_DIR)
+build: host-check
+	sudo ./build/scripts/build-iso.sh --output-dir "$(ISO_DIR)" $(BUILD_ARGS)
 
 clone-vendor:
 	./build/scripts/clone-vendor.sh

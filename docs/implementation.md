@@ -88,6 +88,24 @@
 - Branding does not misrepresent NexOS as an official Fedora edition.
 - Upstream revision and custom patches are recorded.
 
+### Status
+- **Completed:** 2026-10-28. The NexOS overlay now sets the image name and
+  GRUB display name to `NexOS`, records NexOS project metadata, and uses
+  `NexOS Project` / `NexOS_Live` for the ISO publisher, volume ID, and
+  application ID. The generated GRUB menu offers `Start NexOS`, and the
+  live root uses `root=live:CDLABEL=NexOS_Live`.
+- `build/scripts/build-iso.sh` now validates options and required inputs,
+  refreshes `build/nexos-descr/`, builds through KIWI, and regenerates the
+  artifact `.sha256`. `make build` delegates to it.
+- Artifact: `build/output/phase3/NexOS.x86_64-44.iso`, 3,649,394,688
+  bytes, SHA-256
+  `d2def470509374dcb045622edc1af8e17ab91f5dfae821f0a70bdb3e716b1d47`.
+  The ISO booted to the Xfce live desktop under UEFI/QEMU.
+- **Limitation:** The live system still uses Fedora's `/etc/os-release` and
+  desktop artwork; those identity/branding surfaces move to Phase 4. The
+  Phase 3 ISO was boot-tested, not reinstalled. BIOS and physical hardware
+  remain untested. Details and evidence are in `workcompleted.md`.
+
 ## Phase 4 — Desktop branding and defaults
 
 ### Tasks

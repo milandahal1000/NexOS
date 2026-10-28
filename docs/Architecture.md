@@ -77,6 +77,13 @@ Developer Hub CLI ------------/          |
 - If the KIWI tooling requires a modified description, copy only the required files into a separate NexOS-owned build directory and record the upstream commit and patch rationale.
 - Never run the build as root unless KIWI explicitly requires it; prefer the tool's supported privilege model. If root is required, explain why and limit writable paths.
 
+### NexOS image identity
+
+- The NexOS overlay sets the image name/display name to `NexOS`, records NexOS project metadata, and changes the ISO publisher, volume ID, and application ID to `NexOS Project` / `NexOS_Live`.
+- `build/scripts/build-iso.sh` is the validated build entry point; `make build` delegates to it. It refreshes the generated description, runs KIWI, and regenerates the ISO checksum.
+- Image identity is separate from desktop identity: `/etc/os-release`, wallpaper, themes, login, and installer artwork remain Fedora-branded in Phase 3 and are addressed in later branding work.
+- The artifact is `NexOS.x86_64-44.iso`; the live boot path uses `root=live:CDLABEL=NexOS_Live`. Record the exact artifact path, size, SHA-256, and boot evidence for each phase.
+
 ## 4. Repository layout
 
 The repository may evolve, but keep responsibilities clear. Inspect the existing tree before adding or moving files.

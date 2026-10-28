@@ -7,7 +7,7 @@
 	</profiles>
 	<preferences profiles="LiveInstall" arch="x86_64">
 		<type image="iso"
-			publisher="Fedora Project" volid="Fedora_Linux" application_id="Fedora_Linux"
+			publisher="NexOS Project" volid="NexOS_Live" application_id="NexOS_Live"
 			primary="true" flags="dmsquash" filesystem="erofs" erofscompression="lzma,level=6" mediacheck="true"
 			firmware="uefi" efiparttable="gpt" efifatimagesize="30" kernelcmdline="quiet rhgb"
 			>
@@ -16,7 +16,7 @@
 	</preferences>
 	<preferences profiles="LiveInstall" arch="aarch64">
 		<type image="iso"
-			publisher="Fedora Project" volid="Fedora_Linux" application_id="Fedora_Linux"
+			publisher="NexOS Project" volid="NexOS_Live" application_id="NexOS_Live"
 			primary="true" flags="dmsquash" filesystem="erofs" erofscompression="lzma,level=6" mediacheck="true"
 			firmware="uefi" efiparttable="gpt" efifatimagesize="30" kernelcmdline="quiet rhgb"
 			>
@@ -25,7 +25,7 @@
 	</preferences>
 	<preferences profiles="LiveInstall" arch="riscv64">
 		<type image="iso"
-			publisher="Fedora Project" volid="Fedora_Linux" application_id="Fedora_Linux"
+			publisher="NexOS Project" volid="NexOS_Live" application_id="NexOS_Live"
 			primary="true" flags="dmsquash" filesystem="erofs" erofscompression="lzma,level=6" mediacheck="true"
 			firmware="uefi" efiparttable="gpt" efifatimagesize="30" kernelcmdline="quiet rhgb"
 			>
@@ -34,7 +34,7 @@
 	</preferences>
 	<preferences profiles="LiveInstall" arch="ppc64le">
 		<type image="iso"
-			publisher="Fedora Project" volid="Fedora_Linux" application_id="Fedora_Linux"
+			publisher="NexOS Project" volid="NexOS_Live" application_id="NexOS_Live"
 			primary="true" flags="dmsquash" filesystem="erofs" erofscompression="lzma,level=6" mediacheck="true"
 			firmware="ofw" kernelcmdline="quiet rhgb"
 			>

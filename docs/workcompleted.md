@@ -150,3 +150,54 @@ Use this file as a chronological log. Append a new dated section after each comp
 - The final ISO is still Fedora-branded; NexOS product metadata and branding begin in Phase 3.
 - The fallback repaired disk remains at `build/output/phase2/nexos-install.qcow2`; final clean-install evidence is the Phase 2b disk.
 - **Next:** Phase 3 — create the NexOS-owned image overlay, product metadata/labels, and branding hooks without editing the pinned vendor tree.
+
+## Phase 3 — NexOS-owned image configuration
+
+- **Date:** 2026-10-28
+- **Phase:** 3 (NexOS-owned image configuration) — Completed
+- **Goal:** Add NexOS image identity and ISO metadata through the overlay, add a validated build wrapper, rebuild, and confirm the image still boots.
+
+### Configuration changes
+
+- `build/overlay/Fedora.kiwi` now sets `<image ... name="NexOS" displayname="NexOS">` and records the NexOS project author, repository contact, and a specification that identifies the image as Fedora 44 based.
+- `build/overlay/components/liveinstall.xml` now sets `publisher="NexOS Project"`, `volid="NexOS_Live"`, and `application_id="NexOS_Live"` for all declared architectures.
+- The Fedora 44 package repositories, Xfce-Live profile inheritance, release version, RPM GPG verification, and erofs/lzma settings remain unchanged.
+- No vendored file was edited.
+
+### Build workflow
+
+- Added `build/scripts/build-iso.sh`. It validates arguments and required inputs, accepts `--output-dir`, `--profile`, `--allow-existing-root`, and `--help`, refreshes the generated description as the invoking user, runs KIWI, and regenerates the artifact checksum.
+- `make build` now delegates to the wrapper; `ISO_DIR` and `BUILD_ARGS` can be overridden.
+- Command used for the Phase 3 artifact:
+  `sudo ./build/scripts/build-iso.sh --output-dir build/output/phase3`
+- Build completed with exit status 0. No `ERROR`, `Traceback`, `FAILED`, `segfault`, `scriptlet failed`, or skipped OpenPGP check entries appeared in the log.
+
+### Artifact and metadata
+
+- Artifact: `build/output/phase3/NexOS.x86_64-44.iso`, **3,649,394,688 bytes**.
+- SHA-256: `d2def470509374dcb045622edc1af8e17ab91f5dfae821f0a70bdb3e716b1d47`; `sha256sum -c` passed.
+- ISO metadata: volume ID `NexOS_Live`, publisher `NEXOS PROJECT`, application ID `NEXOS_LIVE`.
+- Generated GRUB entries: `Start NexOS`, `Test this media & start NexOS`, and `Start NexOS in basic graphics mode`; live root uses `root=live:CDLABEL=NexOS_Live`.
+- The live `grubenv` contains `saved_entry` but no `blsdir`, confirming the D-013 cleanup still runs.
+- `/etc/os-release` in the image still reports `Fedora Linux 44 (Xfce)`; user-visible desktop identity remains a Phase 4 task.
+
+### Boot verification
+
+- QEMU/OVMF (`q35`, 4 GiB RAM, 4 vCPU, virtio) booted the Phase 3 ISO from CD.
+- GRUB displayed `Start NexOS` with a 10 second timeout and booted the Xfce live desktop at 1280x800.
+- Evidence:
+  - `build/logs/2026-10-28-phase3-build.log`
+  - `build/logs/2026-10-28-phase3-iso-metadata.txt`
+  - `build/logs/2026-10-28-phase3-grub.cfg`
+  - `build/logs/2026-10-28-phase3-serial.log`
+  - `build/logs/2026-10-28-phase3-grub-menu.ppm`
+  - `build/logs/2026-10-28-phase3-live-desktop.ppm`
+  - `assets/screenshots/phase3-grub-menu.png`
+  - `assets/screenshots/phase3-live-desktop.png`
+
+### Limitations and next
+
+- The Phase 3 ISO was boot-tested, not reinstalled; Phase 2 remains the last clean-install validation.
+- BIOS boot and physical hardware are not tested for the Phase 3 ISO.
+- The Fedora desktop artwork and `/etc/os-release` identity remain; do not describe the current ISO as fully NexOS-branded.
+- **Next:** Phase 4 — desktop branding, wallpaper, themes, Xfce defaults, and user-visible NexOS identity.

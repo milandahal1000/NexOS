@@ -114,3 +114,19 @@ Record decisions that affect architecture, dependencies, security, release proce
 - **Decision:** Override the vendor `components/liveinstall.xml` in `build/overlay/` and remove `fscreateoptions="-Efragments -C 1048576"`. Keep erofs and `erofscompression="lzma,level=6"`; only fragment packing is disabled.
 - **Rationale:** Two consecutive full builds with the upstream fragment options ended in `mkfs.erofs[PID]: segfault at ... in mkfs.erofs[...]` at 17:01:57 and 17:15:48. The failed builds then reported `KiwiCommandError: mkfs.erofs: failed to commit fragment ...: [Error 5] Input/output error`. A manual run of the same image root with `-z lzma,level=6` and no `-Efragments` completed successfully, producing a 3.1 GiB erofs image.
 - **Consequences:** The live root keeps upstream erofs+lzma compression but does not use fragments; ISO size may grow slightly (observed test image 3.1 GiB vs. ~2.8 GiB with fragments). Re-test fragment packing after an `erofs-utils` update. Keep `-C 1048576` out while fragments are disabled.
+
+## D-015 — NexOS image identity and ISO labels
+
+- **Date:** 2026-10-28
+- **Status:** Accepted
+- **Decision:** Set the KIWI image `name` and `displayname` to `NexOS`, record the NexOS project as author/contact/specification in the overlay, and set the ISO publisher to `NexOS Project` with volume and application ID `NexOS_Live`. Keep the Fedora 44 `<version>` and `<release-version>` values.
+- **Rationale:** The overlay needs to identify the image as NexOS without editing the pinned vendor tree. KIWI derives the live GRUB title and `GRUB_DISTRIBUTOR` from the image display name, while the ISO labels are used by the live boot path.
+- **Consequences:** The artifact is named `NexOS.x86_64-44.iso` and boots with `root=live:CDLABEL=NexOS_Live`; changing either label requires a boot retest. The live system still uses Fedora's `/etc/os-release` and desktop artwork, so this decision does not make the current image fully NexOS-branded. The image description explicitly identifies NexOS as Fedora 44 based and does not claim to be an official Fedora edition.
+
+## D-016 — Use a validated ISO build wrapper
+
+- **Date:** 2026-10-28
+- **Status:** Accepted
+- **Decision:** Build through `build/scripts/build-iso.sh`; `make build` delegates to it. The wrapper validates options and required inputs, refreshes the generated description as the invoking user, supports `--output-dir`, `--profile`, and `--allow-existing-root`, runs KIWI, and regenerates the artifact checksum.
+- **Rationale:** The direct KIWI command was easy to run with the wrong description, output directory, or resume option, and the previous checksum could become stale. A single validated entry point makes builds reproducible and keeps generated files separate from the pinned vendor tree.
+- **Consequences:** Use `make build` or the wrapper instead of invoking KIWI directly for routine builds. `ISO_DIR` and `BUILD_ARGS` are the Makefile overrides. The wrapper writes the `.sha256` file after a successful build; do not reuse an older checksum after rebuilding.
