@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+build/python/
+
+# Build output
+build/out/
+build/output/
+build/output*/
+build/tmp/
+build/logs/
+build/vendor/
+build/nexos-descr/
+dist/
+*.iso
+*.iso.sha256
+*.log
+
+# Editor and operating system
+.vscode/
+.idea/
+.DS_Store
+*~
+
+# Temporary files
+tmp/
+temp/

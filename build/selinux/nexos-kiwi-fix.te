@@ -1,0 +1,13 @@
+module nexos-kiwi-fix 1.0;
+
+require {
+    type kiwi_t;
+    type rpm_script_t;
+    class process transition;
+}
+
+# Fedora 44's kiwi SELinux policy transitions shell execution from
+# kiwi_t to rpm_script_t but does not grant the transition permission.
+# Without this, rpm scriptlets such as %sysusers fail with EACCES and
+# are reported as "scriptlet failed, exit status 127".
+allow kiwi_t rpm_script_t:process transition;
